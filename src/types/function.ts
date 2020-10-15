@@ -8,51 +8,114 @@ import {
   HTMLAttributes,
   InputHTMLAttributes,
   PropsWithChildren,
-  ReactHTML,
-  ReactSVG,
   ReactSVGElement,
   SVGAttributes,
 } from 'react';
+import { Themed } from './internal';
 import { Interpolation } from './interpolation';
 
-type StyledBase<S> = (
+interface BaseStyleTemplate<
+  Props extends object = object,
+  Theme extends object = object
+> {
+  Props: Props;
+  Theme: Theme;
+}
+
+type ConfigBase = { [K in keyof BaseStyleTemplate]?: BaseStyleTemplate[K] };
+
+// CSS Function with Label Provided
+export type CssWithLabel = <T extends object = object>(
+  label: string,
+) => (
   template: TemplateStringsArray,
-  ...args: Array<Interpolation<unknown>>
-) => S;
+  ...args: Array<Interpolation<Themed<object, T>>>
+) => string;
 
-type StyledClass<P extends object> = StyledBase<ComponentClass<P>>;
-type StyledFC<P extends object> = StyledBase<FC<P>>;
+// CSS Function with no Label Provided
+export type CssWithoutLabel = <T extends object = object>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<object, T>>>
+) => string;
 
-type StyledHTML = StyledBase<
-  <P extends HTMLAttributes<T>, T extends HTMLElement>(
-    props: PropsWithChildren<ClassAttributes<T> & P>,
-  ) => DetailedReactHTMLElement<P, T>
->;
+// Class Component Style Function
+export type StyledClass<P extends object, T extends object = object> = <
+  W extends Styled<{ Props?: P; Theme?: T }> = Styled<{ Props: P; Theme: T }>
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<W['Props'], W['Theme']>>>
+) => ComponentClass<W['Props']>;
 
-type StyledInput = StyledBase<
-  <P extends InputHTMLAttributes<T>, T extends HTMLInputElement>(
-    props: PropsWithChildren<ClassAttributes<T> & P>,
-  ) => DetailedReactHTMLElement<P, T>
->;
+// Function Component Style Function
+export type StyledFC<P extends object, T extends object = object> = <
+  W extends Styled<{ Props?: P; Theme?: T }> = Styled<{ Props: P; Theme: T }>
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<W['Props'], W['Theme']>>>
+) => FC<W['Props']>;
 
-type StyledSVG = StyledBase<
-  <P extends SVGAttributes<T>, T extends SVGElement>(
-    props: PropsWithChildren<ClassAttributes<T> & P>,
-  ) => ReactSVGElement
->;
+// HTML General Element Style Function
+export type StyledHTML<
+  P extends HTMLAttributes<E>,
+  T extends object = object,
+  E extends HTMLElement = HTMLElement
+> = <
+  W extends Styled<{ Props?: P; Theme?: T }> = Styled<{ Props: P; Theme: T }>
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<P & W['Props'], W['Theme']>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & P & W['Props']>,
+) => DetailedReactHTMLElement<P & W['Props'], E>;
 
-type StyledDOM = StyledBase<
-  <P extends DOMAttributes<T>, T extends Element>(
-    props: PropsWithChildren<ClassAttributes<T> & P>,
-  ) => DOMElement<P, T>
->;
+// HTML Input Element Style Function
+export type StyledInput<
+  P extends InputHTMLAttributes<E>,
+  T extends object = object,
+  E extends HTMLInputElement = HTMLInputElement
+> = <
+  W extends Styled<{ Props?: P; Theme?: T }> = Styled<{ Props: P; Theme: T }>
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<P & W['Props'], W['Theme']>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & P & W['Props']>,
+) => DetailedReactHTMLElement<P & W['Props'], E>;
 
-export type CreateStyledFunction = ((
-  type: 'input',
-  label?: string,
-) => StyledInput) &
-  ((type: keyof ReactHTML, label?: string) => StyledHTML) &
-  ((type: keyof ReactSVG, label?: string) => StyledSVG) &
-  ((type: string, label?: string) => StyledDOM) &
-  (<P extends {}>(type: ComponentClass<P>, label?: string) => StyledClass<P>) &
-  (<P extends {}>(type: FC<P>, label?: string) => StyledFC<P>);
+// HTML SVG Element Style Function
+export type StyledSVG<
+  P extends SVGAttributes<E>,
+  T extends object = object,
+  E extends SVGElement = SVGElement
+> = <
+  W extends Styled<{ Props?: P; Theme?: T }> = Styled<{ Props: P; Theme: T }>
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<P & W['Props'], W['Theme']>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & P & W['Props']>,
+) => ReactSVGElement;
+
+// HTML DOM Element Style Function
+export type StyledDOM<
+  P extends DOMAttributes<E>,
+  T extends object = object,
+  E extends Element = Element
+> = <
+  W extends Styled<{ Props?: P; Theme?: T }> = Styled<{ Props: P; Theme: T }>
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<P & W['Props'], W['Theme']>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & P & W['Props']>,
+) => DOMElement<P & W['Props'], E>;
+
+export type Styled<
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  Template extends ConfigBase = {},
+  Props extends object = object,
+  Theme extends object = object
+> = {
+  Props: Template['Props'] extends object ? Template['Props'] : Props;
+  Theme: Template['Theme'] extends object ? Template['Theme'] : Theme;
+};
