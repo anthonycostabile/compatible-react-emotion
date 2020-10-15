@@ -1,0 +1,15 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "rules": {
+    "@typescript-eslint/ban-types": [
+      "error",
+      { "types": { "object": false }, "extendDefaults": true }
+    ],
+    "@typescript-eslint/explicit-module-boundary-types": ["off"]
+  }
+}
