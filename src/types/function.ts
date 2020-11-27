@@ -119,3 +119,65 @@ export type Styled<
   Props: Template['Props'] extends object ? Template['Props'] : Props;
   Theme: Template['Theme'] extends object ? Template['Theme'] : Theme;
 };
+
+// Class Component Themed Style Function
+export type ThemedClass<P extends object, T extends object = object> = <
+  Props extends P = P
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<Props, T>>>
+) => ComponentClass<Props>;
+
+// Function Component Themed Style Function
+export type ThemedFC<P extends object, T extends object = object> = <
+  Props extends P = P
+>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<Props, T>>>
+) => FC<Props>;
+
+// HTML General Element Themed Style Function
+export type ThemedHTML<
+  P extends HTMLAttributes<E>,
+  T extends object = object,
+  E extends HTMLElement = HTMLElement
+> = <Props extends P = P>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<Props, T>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & Props>,
+) => DetailedReactHTMLElement<Props, E>;
+
+// HTML Input Element Themed Style Function
+export type ThemedInput<
+  P extends InputHTMLAttributes<E>,
+  T extends object = object,
+  E extends HTMLInputElement = HTMLInputElement
+> = <Props extends P = P>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<Props, T>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & Props>,
+) => DetailedReactHTMLElement<Props, E>;
+
+// HTML SVG Element Themed Style Function
+export type ThemedSVG<
+  P extends SVGAttributes<E>,
+  T extends object = object,
+  E extends SVGElement = SVGElement
+> = <Props extends P = P>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<Props, T>>>
+) => (props: PropsWithChildren<ClassAttributes<E> & Props>) => ReactSVGElement;
+
+// HTML DOM Element Themed Style Function
+export type ThemedDOM<
+  P extends DOMAttributes<E>,
+  T extends object = object,
+  E extends Element = Element
+> = <Props extends P = P>(
+  template: TemplateStringsArray,
+  ...args: Array<Interpolation<Themed<Props, T>>>
+) => (
+  props: PropsWithChildren<ClassAttributes<E> & Props>,
+) => DOMElement<Props, E>;

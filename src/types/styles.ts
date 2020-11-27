@@ -13,11 +13,17 @@ import {
   CssWithLabel,
   CssWithoutLabel,
   StyledClass,
+  StyledDOM,
   StyledFC,
   StyledHTML,
   StyledInput,
   StyledSVG,
-  StyledDOM,
+  ThemedClass,
+  ThemedDOM,
+  ThemedFC,
+  ThemedHTML,
+  ThemedInput,
+  ThemedSVG,
 } from './function';
 
 export type CreateCssFunction = CssWithLabel & CssWithoutLabel;
@@ -62,3 +68,31 @@ export type CreateStyledFunction = (<
     type: FC<P>,
     label?: string,
   ) => StyledFC<P, T>);
+
+export type CreateThemedStyledFunction<Theme extends object = object> = (<
+  P extends InputHTMLAttributes<E>,
+  E extends HTMLInputElement = HTMLInputElement
+>(
+  type: 'input',
+  label?: string,
+) => ThemedInput<P, Theme>) &
+  (<P extends HTMLAttributes<E>, E extends HTMLElement = HTMLElement>(
+    type: keyof ReactHTML,
+    label?: string,
+  ) => ThemedHTML<P, Theme>) &
+  (<P extends SVGAttributes<E>, E extends SVGElement = SVGElement>(
+    type: keyof ReactSVG,
+    label?: string,
+  ) => ThemedSVG<P, Theme>) &
+  (<P extends DOMAttributes<E>, E extends Element = Element>(
+    type: string,
+    label?: string,
+  ) => ThemedDOM<P, Theme>) &
+  (<P extends object = object>(
+    type: ComponentClass<P>,
+    label?: string,
+  ) => ThemedClass<P, Theme>) &
+  (<P extends object = object>(
+    type: FC<P>,
+    label?: string,
+  ) => ThemedFC<P, Theme>);

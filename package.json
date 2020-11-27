@@ -3,15 +3,12 @@
   "bugs": {
     "url": "https://github.com/anthonycostabile/compatible-react-emotion/issues"
   },
-  "dependencies": {
-    "emotion": "^10.0.27",
-    "react": "16.13.1"
-  },
   "description": "Allows the use of Emotion as it was prior to @emotion/core",
   "devDependencies": {
     "@types/react": "16.9.52",
-    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/eslint-plugin": "4.4.1",
     "@typescript-eslint/parser": "4.4.1",
+    "emotion": "10.0.27",
     "eslint": "7.11.0",
     "eslint-config-prettier": "6.12.0",
     "eslint-config-react": "1.1.7",
@@ -19,10 +16,12 @@
     "eslint-plugin-prettier": "3.1.4",
     "eslint-plugin-react": "7.21.4",
     "prettier": "2.1.2",
+    "react": "16.13.1",
     "typescript": "4.0.3"
   },
   "files": [
-    "lib/**/*"
+    "lib/**/*",
+    "__DEV__.js"
   ],
   "homepage": "https://github.com/anthonycostabile/compatible-react-emotion#readme",
   "keywords": [
@@ -32,6 +31,10 @@
   ],
   "module": "./lib/index.js",
   "name": "compatible-react-emotion",
+  "peerDependencies": {
+    "emotion": "^10.x.x",
+    "react": "^16.x.x"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/anthonycostabile/compatible-react-emotion.git"
@@ -46,5 +49,6 @@
     "postversion": "git push && git push --tags",
     "version": "npm run format && git add -A src"
   },
+  "typings": "./lib/index.d.ts",
   "version": "0.0.1"
 }

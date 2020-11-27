@@ -5,17 +5,20 @@ import {
   TemplateStringsArrayOverride,
 } from './types';
 
-const createCss = <T extends object = object>(
+const createCss = (
   stringTemplate: TemplateStringsArrayOverride,
   ...args: Array<Interpolation<unknown>>
 ) => {
   const interpolation = Array.from(args);
 
-  if (typeof stringTemplate === 'string' && interpolation.length === 0) {
-    return createCssFactory<T>(stringTemplate);
+  if (
+    stringTemplate === undefined ||
+    (typeof stringTemplate === 'string' && interpolation.length === 0)
+  ) {
+    return createCssFactory(stringTemplate || '');
   }
 
-  return createCssFactory<T>()(stringTemplate, ...interpolation);
+  return createCssFactory()(stringTemplate, ...interpolation);
 };
 
 export const css = createCss as CreateCssFunction;
